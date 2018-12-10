@@ -58,6 +58,7 @@ open class KaptWithoutKotlincTask @Inject constructor(private val workerExecutor
         val kaptFlagsForWorker = mutableSetOf<String>().apply {
             if (isVerbose) add("VERBOSE")
             if (mapDiagnosticLocations) add("MAP_DIAGNOSTIC_LOCATIONS")
+            if (includeCompileClasspath) add("INCLUDE_COMPILE_CLASSPATH")
         }
 
         val optionsForWorker = KaptOptionsForWorker(
@@ -75,8 +76,7 @@ open class KaptWithoutKotlincTask @Inject constructor(private val workerExecutor
             processorOptions,
             javacOptions,
 
-            kaptFlagsForWorker,
-            includeCompileClasspath = includeCompileClasspath
+            kaptFlagsForWorker
         )
 
         val kaptClasspath = kaptJars + findKotlinStdlibClasspath(project)
@@ -152,8 +152,7 @@ private class KaptExecution @Inject constructor(
 
             flags,
             mode,
-            detectMemoryLeaksMode,
-            includeCompileClasspath
+            detectMemoryLeaksMode
         )
     }
 
@@ -181,6 +180,5 @@ private data class KaptOptionsForWorker(
     val processingOptions: Map<String, String>,
     val javacOptions: Map<String, String>,
 
-    val flags: Set<String>,
-    val includeCompileClasspath: Boolean
+    val flags: Set<String>
 ) : Serializable

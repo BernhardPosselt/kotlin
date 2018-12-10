@@ -63,19 +63,26 @@ abstract class KaptTask : ConventionTask() {
     val classpath: FileCollection
         get() = kotlinCompileTask.classpath
 
-    // used only for up-to-date checks
-    @Suppress("unused")
+    @Suppress("unused", "DeprecatedCallableAddReplaceWith")
+    @Deprecated(
+        message = "Don't use directly. Used only for up-to-date checks",
+        level = DeprecationLevel.ERROR
+    )
     @get:CompileClasspath
     @get:InputFiles
     internal val internalAbiClasspath: FileCollection
-        get() = kotlinCompileTask.classpath.takeIf { !includeCompileClasspath }.orEmpty()
+        get() = if (includeCompileClasspath) project.files() else kotlinCompileTask.classpath
 
-    // used only for up-to-date checks
-    @Suppress("unused")
+
+    @Suppress("unused", "DeprecatedCallableAddReplaceWith")
+    @Deprecated(
+        message = "Don't use directly. Used only for up-to-date checks",
+        level = DeprecationLevel.ERROR
+    )
     @get:Classpath
     @get:InputFiles
     internal val internalNonAbiClasspath: FileCollection
-        get() = kotlinCompileTask.classpath.takeIf { includeCompileClasspath }.orEmpty()
+        get() = if (includeCompileClasspath) kotlinCompileTask.classpath else project.files()
 
     @get:Internal
     var useBuildCache: Boolean = false

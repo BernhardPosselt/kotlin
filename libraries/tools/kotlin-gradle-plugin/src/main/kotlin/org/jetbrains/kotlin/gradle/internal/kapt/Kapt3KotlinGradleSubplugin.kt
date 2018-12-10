@@ -266,9 +266,7 @@ class Kapt3KotlinGradleSubplugin : KotlinGradleSubplugin<KotlinCompile> {
 
         pluginOptions += SubpluginOption("javacArguments", encodeList(kaptExtension.getJavacOptions()))
 
-        kaptExtension.includeCompileClasspath.let {
-            pluginOptions += SubpluginOption("includeCompileClasspath", it.toString())
-        }
+        pluginOptions += SubpluginOption("includeCompileClasspath", kaptExtension.includeCompileClasspath.toString())
 
         addMiscOptions(pluginOptions)
 

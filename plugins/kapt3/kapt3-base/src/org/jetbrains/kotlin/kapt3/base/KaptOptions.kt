@@ -27,8 +27,7 @@ class KaptOptions(
     val flags: KaptFlags,
 
     val mode: AptMode,
-    val detectMemoryLeaks: DetectMemoryLeaksMode,
-    val includeCompileClasspath: Boolean
+    val detectMemoryLeaks: DetectMemoryLeaksMode
 ) : KaptFlags {
     override fun get(flag: KaptFlag) = flags[flag]
 
@@ -48,11 +47,13 @@ class KaptOptions(
         val processingOptions: MutableMap<String, String> = mutableMapOf()
         val javacOptions: MutableMap<String, String> = mutableMapOf()
 
-        val flags: MutableSet<KaptFlag> = mutableSetOf(KaptFlag.USE_LIGHT_ANALYSIS)
+        val flags: MutableSet<KaptFlag> = mutableSetOf(
+            KaptFlag.USE_LIGHT_ANALYSIS,
+            KaptFlag.INCLUDE_COMPILE_CLASSPATH
+        )
 
         var mode: AptMode = AptMode.WITH_COMPILATION
         var detectMemoryLeaks: DetectMemoryLeaksMode = DetectMemoryLeaksMode.DEFAULT
-        var includeCompileClasspath: Boolean = true
 
         fun build(): KaptOptions {
             val sourcesOutputDir = this.sourcesOutputDir ?: error("'sourcesOutputDir' must be set")
@@ -63,8 +64,7 @@ class KaptOptions(
                 projectBaseDir, compileClasspath, javaSourceRoots,
                 sourcesOutputDir, classesOutputDir, stubsOutputDir, incrementalDataOutputDir,
                 processingClasspath, processors, processingOptions, javacOptions, KaptFlags.fromSet(flags),
-                mode, detectMemoryLeaks,
-                includeCompileClasspath = includeCompileClasspath
+                mode, detectMemoryLeaks
             )
         }
     }
@@ -92,7 +92,7 @@ enum class KaptFlag(val description: String) {
     CORRECT_ERROR_TYPES("Correct error types"),
     MAP_DIAGNOSTIC_LOCATIONS("Map diagnostic locations"),
     STRICT("Strict mode"),
-    DISCOVER_AP_IN_COMPILE_CLASSPATH("Detect annotation processors in compile classpath");
+    INCLUDE_COMPILE_CLASSPATH("Detect annotation processors in compile classpath");
 }
 
 interface KaptSelector {
